@@ -1,13 +1,20 @@
 #include <stdio.h>
-#include <stdio_ext.h>
+//#include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-#include "abk_fileops.h"
+#include "address_book_menu.h"
+
+/*#include "abk_fileops.h"
 #include "abk_log.h"
 #include "abk_menus.h"
-#include "abk.h"
+#include "abk.h"*/
+
+void clearBuffer(){
+    int c;
+    while((c = getchar()) != '\n' && c != EOF);
+}
 
 int get_option(int type, const char *msg)
 {
@@ -19,6 +26,24 @@ int get_option(int type, const char *msg)
 	 */ 
 
 	/* Fill the code to add above functionality */
+	printf("%s ", msg);
+	clearBuffer();
+
+	switch(type){
+		case NONE:
+			return 0;
+		case NUM :{
+			int n;
+			scanf("%d", &n);
+			return n;
+		}
+		case CHAR:{
+			char choice;
+			scanf("%c", &choice);
+			return choice;
+		}
+	}
+
 }
 
 Status save_prompt(AddressBook *address_book)
@@ -30,6 +55,11 @@ Status save_prompt(AddressBook *address_book)
 		main_menu();
 
 		option = get_option(CHAR, "\rEnter 'N' to Ignore and 'Y' to Save: ");
+
+		if(option != 'Y' && option != 'N'){
+			printf("Invalid input.\n");
+			continue;
+		}
 
 		if (option == 'Y')
 		{
