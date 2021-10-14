@@ -83,6 +83,29 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 	 * The menu provide navigation option if the entries increase the page size
 	 */ 
 
+	 /// list_contacts(address_book, "Search Result", Serial Number, "Press: [q] | Cancel: ", e_list)
+	 /// 
+	 /// *index is passed so we can passed in the choice(S. No) 
+	 menu_header(title);
+	 printf("===================================================================================================\n");
+	 printf(": S.No : Name                        : Phone No                        : Email ID                 :\n");
+	 printf("===================================================================================================\n");
+	 
+	 if(mode == e_list){
+		 
+	 }
+	 else{
+		 *index = get_option(NUM, msg);
+	 }
+	/*
+	e_search,
+	e_edit,
+	e_delete,
+	e_list,*/
+
+	 
+
+
 	return e_success;
 }
 
