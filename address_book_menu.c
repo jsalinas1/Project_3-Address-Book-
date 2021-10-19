@@ -5,6 +5,7 @@
 #include <ctype.h>
 
 #include "address_book_menu.h"
+#include "address_book_fops.h"
 
 /*#include "abk_fileops.h"
 #include "abk_log.h"
@@ -26,8 +27,8 @@ int get_option(int type, const char *msg)
 	 */ 
 
 	/* Fill the code to add above functionality */
+	fflush(stdin);
 	printf("%s ", msg);
-	clearBuffer();
 
 	switch(type){
 		case NONE:
@@ -43,6 +44,8 @@ int get_option(int type, const char *msg)
 			return choice;
 		}
 	}
+
+	
 
 }
 
@@ -63,7 +66,7 @@ Status save_prompt(AddressBook *address_book)
 
 		if (option == 'Y')
 		{
-			save_file(address_book);
+			//save_file(address_book);
 			printf("Exiting. Data saved in %s\n", DEFAULT_FILE);
 
 			break;
@@ -86,17 +89,34 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 	 /// list_contacts(address_book, "Search Result", Serial Number, "Press: [q] | Cancel: ", e_list)
 	 /// 
 	 /// *index is passed so we can passed in the choice(S. No) 
+	 //address_book->fp = fopen(DEFAULT_FILE);
 	 menu_header(title);
-	 printf("===================================================================================================\n");
-	 printf(": S.No : Name                        : Phone No                        : Email ID                 :\n");
-	 printf("===================================================================================================\n");
+	 printf("=======================================================================================================\n");
+	 printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
+	 printf("=======================================================================================================\n");
+
+	switch(mode){
+		case e_list:{
+		printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
+		address_book->list->phone_numbers[0][0] != ' ' ? address_book->list->phone_numbers[0] : " ",
+		address_book->list->email_addresses[0][0] != ' ' ? address_book->list->email_addresses[0] : " ");
+		for(int i = 1; i < 5; i++)
+			printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
+			 address_book->list->phone_numbers[i][0] != ' ' ? address_book->list->phone_numbers[i] : " ",
+			 address_book->list->email_addresses[i][0] != ' ' ? address_book->list->email_addresses[i] : " ");
+		printf("=======================================================================================================\n");
+		char c = get_option(CHAR, msg);
+		break;
+		}
+		case e_search:{
+			
+			break;
+		}
+
+	}
+
+//	*index = get_option(NUM, msg);
 	 
-	 if(mode == e_list){
-		 
-	 }
-	 else{
-		 *index = get_option(NUM, msg);
-	 }
 	/*
 	e_search,
 	e_edit,
@@ -113,10 +133,11 @@ void menu_header(const char *str)
 {
 	fflush(stdout);
 
-	system("clear");
+
+	system("cls");
 
 	printf("#######  Address Book  #######\n");
-	if (str != '\0')
+	if (*str != '\0')
 	{
 		printf("#######  %s\n", str);
 	}
@@ -174,7 +195,7 @@ Status menu(AddressBook *address_book)
 				break;
 				/* Add your implementation to call list_contacts function here */
 			case e_save:
-				save_file(address_book);
+				//save_file(address_book);
 				break;
 			case e_exit:
 				break;
@@ -207,4 +228,27 @@ Status edit_contact(AddressBook *address_book)
 Status delete_contact(AddressBook *address_book)
 {
 	/* Add the functionality for delete contacts here */
+}
+
+
+int main(void){
+	AddressBook person;
+	ContactInfo target;
+	strcpy(target.name[0], "Jezreel Salinas");
+	strcpy(target.phone_numbers[0], "760-835-1000");
+	strcpy(target.phone_numbers[1], "760-835-1020");
+	for(int i = 2; i < 5; i++){
+		strcpy(target.phone_numbers[i], " ");
+	}
+	strcpy(target.email_addresses[0], "jsalinas@cpp.edu");
+	for(int i = 1; i < 5; i++){
+		strcpy(target.email_addresses[i], " ");
+	}
+	target.si_no = 1;
+	person.list = &target;
+	int index=0;
+
+	list_contacts(&person, "List Contacts", &index, "Press n for next list | q to quit: ", e_list);
+
+	return 0;
 }
