@@ -4,10 +4,10 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "abk_fileops.h"
-#include "abk_log.h"
-#include "abk_menus.h"
-#include "abk.h"
+#include "address_book_fops.h"
+//#include "abk_log.h"
+#include "address_book_menu.h"
+#include "address_book.h"
 
 int get_option(int type, const char *msg)
 {
@@ -106,10 +106,10 @@ Status menu(AddressBook *address_book)
 		switch (option)
 		{
 			case e_add_contact:
-				/* Add your implementation to call add_contacts function here */
+				add_contacts(address_book);
 				break;
 			case e_search_contact:
-				search_contact(address_book);
+				search_contact(address_book); 
 				break;
 			case e_edit_contact:
 				edit_contact(address_book);
@@ -133,7 +133,103 @@ Status menu(AddressBook *address_book)
 
 Status add_contacts(AddressBook *address_book)
 {
-	/* Add the functionality for adding contacts here */
+ContactInfo newPerson;
+	int phoneCount = 0; //total number of phone numbers added
+	int emailCount = 0; //total number of emails added
+	int user_choice;
+
+	strcpy(newPerson.name, " ");
+	strcpy(newPerson.phone_numbers[0], " ");
+	strcpy(newPerson.email_addresses[0], " ");
+
+	do{
+		//Displaying the menu
+	 	menu_header("Add Contact:\n\n");
+		printf("0. Back\n");
+		printf("1. Name: %s\n", newPerson.name);
+		printf("2. Phone No 1: %s\n", newPerson.phone_numbers[0]);
+
+		if(phoneCount > 1){		//If there are more than one phone numbers added it will loop to display
+			for(int i = 0; i < phoneCount-1; i++){
+				printf("\t    %d: %s\n", i+2, newPerson.phone_numbers[i+1]);
+			}
+		}
+	
+		printf("3. Email ID 1: %s\n", newPerson.email_addresses);
+
+		if(emailCount > 1){		//If there are more than one emails added it will loop to display
+			for(int i = 0; i < emailCount-1; i++){
+				printf("\t    %d: %s\n", i+1, newPerson.email_addresses[i+1]);
+			}
+		}
+
+		//Prompting the user to select a menu option 0-3
+		do{
+			user_choice = get_option(NUM, "Please enter an option 0-3: ");
+			if(user_choice < 0 || user_choice > 3){
+				printf("Invalid input!\n");
+			}
+
+		} while(user_choice < 0 || user_choice > 3);
+
+		//Switch for the user choices
+		switch(user_choice) {
+			case 0:
+				break;
+			case 1:	//Option to enter a name for contact
+				printf("Enter the name: ");
+				scanf("%s", &newPerson.name);
+				break;
+			case 2: //Option to enter a phone number for contact
+				if(phoneCount < 5){
+					printf("Enter Phone Number %d: [Please reenter the same option for alternate Phone Number]: ", phoneCount+1);
+					scanf("%s", &newPerson.phone_numbers[phoneCount]);
+					phoneCount++;
+				} else{
+					printf("Already at max phone numbers for contact.\n");
+				}
+				break;
+			case 3: //Option to enter a email for contact
+				if(emailCount < 5){
+					printf("Enter Email ID %d: [Please reenter the same option for alternate Email ID]: ", emailCount+1);
+					scanf("%s", &newPerson.email_addresses[emailCount]);
+					emailCount++;
+				} else {
+					printf("Already at the max emails for contact.\n");
+				}
+				break;
+		}
+	} while(user_choice != 0);
+
+	/*
+	Print contact info to .csv file
+	Each 11 possible fields for the contact are separated by a comma.
+	Unused fields for phone and email are set to a space.
+	Adds a new line to the .csv at the end of the contact info.
+	*/
+	fprintf(address_book->fp, "%s", newPerson.name);
+	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
+
+	for(int i = 0; i < 5; i++){
+		if(i < phoneCount){
+			fprintf(address_book->fp, newPerson.phone_numbers[i]);
+			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
+		} else {
+			fprintf(address_book->fp, " ");
+			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
+		}
+	}
+
+	for(int i = 0; i < 5; i++){
+		if(i < emailCount){
+			fprintf(address_book->fp, newPerson.email_addresses[i]);
+			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
+		} else {
+			fprintf(address_book->fp, " ");			
+			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
+		}
+	}
+	fprintf(address_book->fp, "%c", NEXT_ENTRY);
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
