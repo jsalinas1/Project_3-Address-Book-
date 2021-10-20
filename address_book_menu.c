@@ -90,22 +90,38 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 	 /// 
 	 /// *index is passed so we can passed in the choice(S. No) 
 	 //address_book->fp = fopen(DEFAULT_FILE);
-	 menu_header(title);
-	 printf("=======================================================================================================\n");
-	 printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
-	 printf("=======================================================================================================\n");
+	 
 
 	switch(mode){
 		case e_list:{
-		printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
-		address_book->list->phone_numbers[0][0] != ' ' ? address_book->list->phone_numbers[0] : " ",
-		address_book->list->email_addresses[0][0] != ' ' ? address_book->list->email_addresses[0] : " ");
-		for(int i = 1; i < 5; i++)
-			printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
-			 address_book->list->phone_numbers[i][0] != ' ' ? address_book->list->phone_numbers[i] : " ",
-			 address_book->list->email_addresses[i][0] != ' ' ? address_book->list->email_addresses[i] : " ");
-		printf("=======================================================================================================\n");
-		char c = get_option(CHAR, msg);
+			char c;
+			do{
+				menu_header(title);
+				printf("=======================================================================================================\n");
+				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
+	 			printf("=======================================================================================================\n");
+				fscanf(address_book->fp, "%d,%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%[^,],%s",
+				address_book->list->si_no, address_book->list->name[0], address_book->list->phone_numbers[0],
+				address_book->list->phone_numbers[1], address_book->list->phone_numbers[2],
+				address_book->list->phone_numbers[3], address_book->list->phone_numbers[3],
+				address_book->list->email_addresses[0], address_book->list->email_addresses[1],
+				address_book->list->email_addresses[2], address_book->list->email_addresses[3],
+				address_book->list->email_addresses[4]);
+
+				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
+				address_book->list->phone_numbers[0][0] != ' ' ? address_book->list->phone_numbers[0] : " ",
+				address_book->list->email_addresses[0][0] != ' ' ? address_book->list->email_addresses[0] : " ");
+				for(int i = 1; i < 5; i++)	
+					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
+					address_book->list->phone_numbers[i],
+					address_book->list->email_addresses[i]);
+				printf("=======================================================================================================\n");
+				c = get_option(CHAR, msg);
+		}while(c != 'q' && c != 'Q');
+
+		
+		
+		
 		break;
 		}
 		case e_search:{
@@ -231,24 +247,3 @@ Status delete_contact(AddressBook *address_book)
 }
 
 
-int main(void){
-	AddressBook person;
-	ContactInfo target;
-	strcpy(target.name[0], "Jezreel Salinas");
-	strcpy(target.phone_numbers[0], "760-835-1000");
-	strcpy(target.phone_numbers[1], "760-835-1020");
-	for(int i = 2; i < 5; i++){
-		strcpy(target.phone_numbers[i], " ");
-	}
-	strcpy(target.email_addresses[0], "jsalinas@cpp.edu");
-	for(int i = 1; i < 5; i++){
-		strcpy(target.email_addresses[i], " ");
-	}
-	target.si_no = 1;
-	person.list = &target;
-	int index=0;
-
-	list_contacts(&person, "List Contacts", &index, "Press n for next list | q to quit: ", e_list);
-
-	return 0;
-}
