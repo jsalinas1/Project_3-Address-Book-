@@ -15,6 +15,16 @@ Status load_file(AddressBook *address_book)
 	/* 
 	 * Check for file existance
 	 */
+	address_book->count = 0;
+
+	if(address_book->fp = fopen(DEFAULT_FILE, "r")){
+		char c;
+		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
+        	if (c == '\n') // Increment count if this character is newline
+            	address_book->count++;
+		fclose(address_book->fp);
+		ret = 0;
+	}
 
 	if (ret == 0)
 	{
@@ -22,10 +32,13 @@ Status load_file(AddressBook *address_book)
 		 * Do the neccessary step to open the file
 		 * Do error handling
 		 */ 
+		 address_book->fp = fopen(DEFAULT_FILE, "a+");
+
 	}
 	else
 	{
 		/* Create a file for adding entries */
+		address_book->fp = fopen(DEFAULT_FILE, "w");
 	}
 
 	return e_success;
@@ -37,7 +50,8 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */ 
-	address_book->fp = fopen(DEFAULT_FILE, "w");
+	//fclose(address_book->fp);
+	//address_book->fp = fopen(DEFAULT_FILE, "w");
 
 	if (address_book->fp == NULL)
 	{
