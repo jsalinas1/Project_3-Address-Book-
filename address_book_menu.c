@@ -201,12 +201,18 @@ ContactInfo newPerson;
 		}
 	} while(user_choice != 0);
 
+	//Increment count and assign SI_NO to count
+	address_book->count++;
+	newPerson.si_no = address_book->count;
+
 	/*
 	Print contact info to .csv file
 	Each 11 possible fields for the contact are separated by a comma.
 	Unused fields for phone and email are set to a space.
 	Adds a new line to the .csv at the end of the contact info.
 	*/
+	fprintf(address_book->fp, "%d", newPerson.si_no);
+	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
 	fprintf(address_book->fp, "%s", newPerson.name);
 	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
 
