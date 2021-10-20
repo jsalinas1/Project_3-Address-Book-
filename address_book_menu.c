@@ -245,7 +245,73 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 
 Status search_contact(AddressBook *address_book)
 {
-	/* Add the functionality for search contacts here */
+	int user_choice;
+	char str[32];
+
+	do {
+		menu_header("Search contact by: ");
+		printf("0. Back\n");
+		printf("1. Name\n");
+		printf("2. Phone\n");
+		printf("3. Email\n");
+		printf("4. Serial No.\n\n");
+		printf("Please select an option: ");
+
+		//Prompting the user to select a menu option 0-3
+		do{
+			user_choice = get_option(NUM, "Please enter an option 0-4: ");
+			if(user_choice < 0 || user_choice > 4){
+				printf("Invalid input!\n");
+			}
+
+		} while(user_choice < 0 || user_choice > 4);
+
+		switch(user_choice){
+			case 0:
+				break;
+			case 1: //Option to search for name
+				do{
+					//User inputs name to search for
+					printf("Enter the name: ");
+					scanf("%s", &str);
+					//If str length is greater than max name length possible
+					if(strlen(str) > 32)
+						printf("Invalid name length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", e_search_contact);
+				break;
+			case 2: //Option to search for phone number
+				do{
+					//User inputs phone to search for
+					printf("Enter the phone number: ");
+					scanf("%s", &str);
+					//If str length is greater than max phone length possible
+					if(strlen(str) > 32)
+						printf("Invalid phone length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				break;
+			case 3: //Option to search for email
+				do{
+					//User inputs email to search for
+					printf("Enter the email: ");
+					scanf("%s", &str);
+					//If str length is greater than max email length possible
+					if(strlen(str) > 32)
+						printf("Invalid email length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				break;
+			case 4: //Option to search for serial number
+				printf("Enter the serial number: ");
+				scanf("%s", &str);
+				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				break;
+		}
+	} while(user_choice != 0);
 }
 
 Status edit_contact(AddressBook *address_book)
