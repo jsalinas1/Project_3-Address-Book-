@@ -240,7 +240,7 @@ ContactInfo newPerson;
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
-	/* Add the functionality for adding contacts here */
+	
 }
 
 Status search_contact(AddressBook *address_book)
