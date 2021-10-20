@@ -236,6 +236,8 @@ ContactInfo newPerson;
 		}
 	}
 	fprintf(address_book->fp, "%c", NEXT_ENTRY);
+
+	return e_back;
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
@@ -312,6 +314,8 @@ Status search_contact(AddressBook *address_book)
 				break;
 		}
 	} while(user_choice != 0);
+
+	return e_back;
 }
 
 Status edit_contact(AddressBook *address_book)
