@@ -373,10 +373,31 @@ ContactInfo newPerson;
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
+	rewind(address_book->fp);
+
+	char buffer[32];
+   char comma;
+
 	if (field == 1)
 	{
-		
+		for (int i = 0; i < 1; i++)
+		{
+			fscanf(address_book->fp, "%[^,]s", buffer);
+      	comma = getc (address_book->fp);
+		}
+
+		for (int i = 0; i < loop_count; i++)
+		{
+			fscanf(address_book->fp, "%[^,]s", buffer);
+      	comma = getc (address_book->fp);
+
+			if (strcmp(buffer, str) == 0)
+			{
+				return e_success;
+			}
+		}
 	}
+	
 }
 
 Status search_contact(AddressBook *address_book)
