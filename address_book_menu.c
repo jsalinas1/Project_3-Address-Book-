@@ -316,7 +316,6 @@ Status menu(AddressBook *address_book)
 			case e_list_contacts:
 				list_contacts(address_book, "Search Result",&k, "Press q to quit | n next page: ", e_list);
 				break;
-				/* Add your implementation to call list_contacts function here */
 			case e_save:
 				save_file(address_book);
 				break;
