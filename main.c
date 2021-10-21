@@ -1,9 +1,5 @@
 #include <stdio.h>
-<<<<<<< HEAD
-// #include <stdio_ext.h>
-=======
 //#include <stdio_ext.h>
->>>>>>> origin/Jezreel_Salinas_branch
 #include <stdlib.h>
 #include <string.h>
 

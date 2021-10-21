@@ -385,7 +385,10 @@ ContactInfo newPerson;
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
-	
+	if (field == 1)
+	{
+		
+	}
 }
 
 Status search_contact(AddressBook *address_book)

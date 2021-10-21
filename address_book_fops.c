@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-<<<<<<< HEAD
-// #include <unistd.h>
-=======
 //#include <unistd.h>
->>>>>>> origin/Jezreel_Salinas_branch
 #include <sys/stat.h>
 #include <errno.h>
 #include <ctype.h>
