@@ -148,7 +148,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 		break;
 		}
 		case e_search:{
-			int c;
+			char c;
 			do{
 				menu_header(title);
 				
@@ -172,6 +172,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 
 		case e_add:{ ///This is a mode where it shows the addressbook result after adding
 			char c;
+			*index = 0;
 			do{
 				menu_header(title);
 				
@@ -192,15 +193,61 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 			break;
 		}
 
-	}
+		case e_edit:{
+			char c;
+			*index = 0;
+			do{
+				menu_header(title);
+				
+				printf("=======================================================================================================\n");
+				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
+	 			printf("=======================================================================================================\n");
+				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
+				address_book->list->phone_numbers[0],
+				address_book->list->email_addresses[0]);
+				for(int i = 1; i < 5; i++)	
+					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
+					address_book->list->phone_numbers[i],
+					address_book->list->email_addresses[i]);
+				printf("=======================================================================================================\n");
+				c = get_option(CHAR, msg);
+				if(c == 's'){
+					*index = get_option(NUM, "Select a serial number(S. No) to edit: ");
+					c = 'q';
+				}
+				
+			}while(c != 'q' && c != 'Q');
+			break;
+		}
 
-//	*index = get_option(NUM, msg);
-	 
-	/*
-	e_search,
-	e_edit,
-	e_delete,
-	e_list,*/
+		case e_delete:{
+			char c;
+			do{
+				menu_header(title);
+				
+				printf("=======================================================================================================\n");
+				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
+	 			printf("=======================================================================================================\n");
+				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
+				address_book->list->phone_numbers[0],
+				address_book->list->email_addresses[0]);
+				for(int i = 1; i < 5; i++)	
+					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
+					address_book->list->phone_numbers[i],
+					address_book->list->email_addresses[i]);
+				printf("=======================================================================================================\n");
+				c = get_option(CHAR, msg);
+				if(c == 's'){
+					*index = get_option(NUM, "Select a serial number(S. No) to delete: ");
+					c = 'q';
+				}
+				
+				
+			}while(c != 'q' && c != 'Q');
+			break;
+		}
+
+	}
 
 	 
 
