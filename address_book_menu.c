@@ -99,22 +99,22 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 	 /// 
 	 /// *index is passed so we can passed in the choice(S. No) 
 	 //address_book->fp = fopen(DEFAULT_FILE);
-	address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo));
+	
 	switch(mode){
 		case e_list:{ ///This is a mode where it shows all of the list
 			load_file(address_book); /// Loads list from the file
-			*index = 1;
+			*index = 0;
 			char c = 'n';
 			char str[400];
 			//load_contact(address_book,c);
 			do{
 				menu_header(title);
-				
+				printf("%d %d\n", address_book->count, *index);
 				printf("=======================================================================================================\n");
 				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
 	 			printf("=======================================================================================================\n");
 				if(*index < address_book->count && c == 'n'){
-					*index++;
+					*index = *index + 1;
 					load_contact(address_book, c);	
 				}
 				
@@ -139,7 +139,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 			break;
 		}
 
-		case e_add:{ /*///This is a mode where it shows the addressbook result after adding
+		case e_add:{ ///This is a mode where it shows the addressbook result after adding
 			char c;
 			do{
 				menu_header(title);
@@ -157,7 +157,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 				printf("=======================================================================================================\n");
 				c = get_option(CHAR, msg);
 				
-			}while(c != 'q' && c != 'Q');*/
+			}while(c != 'q' && c != 'Q');
 			break;
 		}
 
@@ -208,6 +208,7 @@ void main_menu(void)
 
 Status menu(AddressBook *address_book)
 {
+	address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo));
 	ContactInfo backup;
 	Status ret;
 	int option;
@@ -363,9 +364,9 @@ ContactInfo newPerson;
 	}
 	fprintf(address_book->fp, "%c", NEXT_ENTRY);
 
-	//address_book->list = &newPerson;
-	//int k = 0;
-	//list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
+	address_book->list = &newPerson;
+	int k = 0;
+	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
 
 }
 
