@@ -9,6 +9,8 @@
 #include "address_book_menu.h"
 #include "address_book.h"
 
+
+
 int get_option(int type, const char *msg)
 {
 	/*
@@ -17,9 +19,9 @@ int get_option(int type, const char *msg)
 	 * Read an number
 	 * Read a charcter
 	 */ 
+	fflush(stdin);
 
 	/* Fill the code to add above functionality */
-	fflush(stdin);
 	printf("%s ", msg);
 
 	switch(type){
@@ -37,7 +39,6 @@ int get_option(int type, const char *msg)
 		}
 	}
 
-	
 
 }
 
@@ -117,7 +118,14 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 					*index = *index + 1;
 					load_contact(address_book, c);	
 				}
-				
+				/*else if(*index > 0 && c == 'p'){
+					*index = *index - 1;
+					fclose(address_book->fp);
+					load_file(address_book);
+					for(int i = 0; i < *index; i++)
+						fscanf(address_book->fp, "%[^\n]", str);
+					load_contact(address_book, c);
+				}*/
 
 				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
 				address_book->list->phone_numbers[0],
@@ -262,9 +270,11 @@ ContactInfo newPerson;
 	int emailCount = 0; //total number of emails added
 	int user_choice;
 
-	strcpy(newPerson.name[0], " ");
-	strcpy(newPerson.phone_numbers[0], " ");
-	strcpy(newPerson.email_addresses[0], " ");
+	strcpy(newPerson.name[0], " "); /// Reinitializing the strings with default space
+	for(int i = 0; i < 5; i ++){
+		strcpy(newPerson.phone_numbers[i], " ");
+		strcpy(newPerson.email_addresses[i], " ");
+	}
 
 	do{
 		//Displaying the menu
