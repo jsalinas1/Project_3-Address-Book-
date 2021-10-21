@@ -498,7 +498,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 				break;
 			case 2: //Option to enter a phone number for contact
 				do{
-					phone_choice = get_option(NUM, "Please choose an existing number to edit, or select the next number to add a phone [MAX 5 PHONES]: ");
+					phone_choice = get_option(NUM, "Please choose an existing phone number to edit, or select the the number of the next slot to add a phone [MAX 5 PHONE NUMBERS]: ");
 					if(phone_choice < 1 || phone_choice > phoneCount+1 || phone_choice > 5){
 						printf("Invalid input!\n");
 					}
@@ -512,7 +512,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 				break;
 			case 3: //Option to enter a email for contact
 				do{
-					email_choice = get_option(NUM, "Please choose an existing email to edit, or select the next number to add a email[MAX 5 EMAILS]: ");
+					email_choice = get_option(NUM, "Please choose an existing email to edit, or select the the number of the next slot to add a email [MAX 5 EMAILS]: ");
 					if(email_choice < 1 || email_choice > emailCount+1 || email_choice > 5){
 						printf("Invalid input!\n");
 					}
