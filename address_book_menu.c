@@ -109,7 +109,7 @@ Status menu(AddressBook *address_book)
 				add_contacts(address_book);
 				break;
 			case e_search_contact:
-				search_contact(address_book); 
+				search_contact(address_book, e_search); 
 				break;
 			case e_edit_contact:
 				edit_contact(address_book);
@@ -131,7 +131,7 @@ Status menu(AddressBook *address_book)
 	return e_success;
 }
 
-Status add_contacts(AddressBook *address_book, Modes mode)
+Status add_contacts(AddressBook *address_book)
 {
 ContactInfo newPerson;
 	int phoneCount = 0; //total number of phone numbers added
@@ -223,7 +223,7 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 	/* Add the functionality for adding contacts here */
 }
 
-Status search_contact(AddressBook *address_book)
+Status search_contact(AddressBook *address_book, Modes mode)
 {
 	int user_choice;
 	char str[32];
@@ -259,7 +259,7 @@ Status search_contact(AddressBook *address_book)
 						printf("Invalid name length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search);
+				search(str, address_book, 0, user_choice, "", mode);
 				break;
 			case 2: //Option to search for phone number
 				do{
@@ -271,7 +271,7 @@ Status search_contact(AddressBook *address_book)
 						printf("Invalid phone length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search);				
+				search(str, address_book, 0, user_choice, "", mode);				
 				break;
 			case 3: //Option to search for email
 				do{
@@ -283,12 +283,12 @@ Status search_contact(AddressBook *address_book)
 						printf("Invalid email length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search);				
+				search(str, address_book, 0, user_choice, "", mode);				
 				break;
 			case 4: //Option to search for serial number
 				printf("Enter the serial number: ");
 				scanf("%s", &str);
-				search(str, address_book, 0, user_choice, "", e_search);				
+				search(str, address_book, 0, user_choice, "", mode);				
 				break;
 		}
 	} while(user_choice != 0);
