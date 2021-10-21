@@ -74,11 +74,10 @@ Status save_prompt(AddressBook *address_book)
 
 void load_contact(AddressBook *address_book, char c){
 	
-	
-	fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]", &address_book->list->si_no,
-	address_book->list->name[0], address_book->list->phone_numbers[0], address_book->list->phone_numbers[1], address_book->list->phone_numbers[2], 
-	address_book->list->phone_numbers[3], address_book->list->phone_numbers[4], address_book->list->email_addresses[0], 
-	address_book->list->email_addresses[1], address_book->list->email_addresses[2], address_book->list->email_addresses[3], 
+	fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]",
+	&address_book->list->si_no, address_book->list->name[0], address_book->list->phone_numbers[0], address_book->list->phone_numbers[1], 
+	address_book->list->phone_numbers[2], address_book->list->phone_numbers[3], address_book->list->phone_numbers[4], 
+	address_book->list->email_addresses[0], address_book->list->email_addresses[1], address_book->list->email_addresses[2], address_book->list->email_addresses[3], 
 	address_book->list->email_addresses[4]);
 	if(c == 'n'){
 		char str[400];
@@ -148,22 +147,23 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 		break;
 		}
 		case e_search:{
-			char c;
+			char c = 'q';
+			int myIndex = *index;
 			do{
-				menu_header(title);
-				
+				//menu_header(title);
+				printf("%d\n", myIndex);
 				printf("=======================================================================================================\n");
 				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
 	 			printf("=======================================================================================================\n");
-				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
-				address_book->list->phone_numbers[0],
-				address_book->list->email_addresses[0]);
+				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list[myIndex].si_no, address_book->list[myIndex].name[0],
+				address_book->list[myIndex].phone_numbers[0],
+				address_book->list[myIndex].email_addresses[0]);
 				for(int i = 1; i < 5; i++)	
 					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
-					address_book->list->phone_numbers[i],
-					address_book->list->email_addresses[i]);
+					address_book->list[myIndex].phone_numbers[i],
+					address_book->list[myIndex].email_addresses[i]);
 				printf("=======================================================================================================\n");
-				c = get_option(CHAR, msg);
+				
 				
 			}while(c != 'q' && c != 'Q');
 			
@@ -195,55 +195,46 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 
 		case e_edit:{
 			char c;
-			*index = 0;
+			int choice;
 			do{
-				menu_header(title);
-				
-				printf("=======================================================================================================\n");
-				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
-	 			printf("=======================================================================================================\n");
-				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
-				address_book->list->phone_numbers[0],
-				address_book->list->email_addresses[0]);
-				for(int i = 1; i < 5; i++)	
-					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
-					address_book->list->phone_numbers[i],
-					address_book->list->email_addresses[i]);
-				printf("=======================================================================================================\n");
-				c = get_option(CHAR, msg);
+				c = get_option(CHAR, "Press s to select | q to cancel : ");
 				if(c == 's'){
-					*index = get_option(NUM, "Select a serial number(S. No) to edit: ");
-					c = 'q';
+					choice = get_option(NUM, "Please select a number: ");
+					break;
 				}
-				
-			}while(c != 'q' && c != 'Q');
+			}while(c != 'q');
+			if(c == 's') *index = choice;
+			else *index = -1;
 			break;
 		}
 
 		case e_delete:{
+			int choice;
 			char c;
 			do{
-				menu_header(title);
-				
-				printf("=======================================================================================================\n");
-				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
-	 			printf("=======================================================================================================\n");
-				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
-				address_book->list->phone_numbers[0],
-				address_book->list->email_addresses[0]);
-				for(int i = 1; i < 5; i++)	
-					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
-					address_book->list->phone_numbers[i],
-					address_book->list->email_addresses[i]);
-				printf("=======================================================================================================\n");
-				c = get_option(CHAR, msg);
+				c = get_option(CHAR, "Press s to select | q to cancel : ");
 				if(c == 's'){
-					*index = get_option(NUM, "Select a serial number(S. No) to delete: ");
-					c = 'q';
+					do{
+						choice = get_option(NUM, "Please select a number: ");
+						if(choice < 0 || choice > address_book->count)
+							printf("Invalid input\n");
+						
+					}while(choice < 0 || choice > address_book->count);
+					break;
 				}
-				
-				
-			}while(c != 'q' && c != 'Q');
+			}while(c != 'q');
+
+			if(c == 's'){
+			//address_book->list[choice] = address_book->list[address_book->count - 1];
+			strcpy(address_book->list[choice-1].name[0], address_book->list[address_book->count - 1].name[0]);
+			for(int i = 0; i < 5; i++){
+				strcpy(address_book->list[choice-1].phone_numbers[i], address_book->list[address_book->count - 1].phone_numbers[i]);
+				strcpy(address_book->list[choice-1].email_addresses[i],address_book->list[address_book->count - 1].email_addresses[i]);
+			}
+			//address_book->list[choice-1].si_no = address_book->list[address_book->count - 1].si_no;
+			address_book->count = address_book->count - 1;
+			}
+
 			break;
 		}
 
@@ -254,6 +245,8 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 
 	return e_success;
 }
+
+
 
 void menu_header(const char *str)
 {
@@ -282,35 +275,37 @@ void main_menu(void)
 	printf("6. Save\n");
 	printf("\n");
 	printf("Please select an option: ");
+	
 }
 
 Status menu(AddressBook *address_book)
 {
-	address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo));
+	//address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	ContactInfo backup;
 	Status ret;
 	int option;
 	int k = 0;
+	
 	do
 	{
 		main_menu();
-
+		//for(int i = 0; i < address_book->count; i++) printf("%s\n", address_book->list[i].name[0]);
 		option = get_option(NUM, "");
-
+		
 		if ((address_book-> count == 0) && (option != e_add_contact))
 		{
 			get_option(NONE, "No entries found!!. Would you like to add? Use Add Contacts");
 
 			continue;
 		}
-
+		
 		switch (option)
 		{
 			case e_add_contact:
 				add_contacts(address_book);
 				break;
 			case e_search_contact:
-				search_contact(address_book); 
+				search_contact(address_book, e_search); 
 				break;
 			case e_edit_contact:
 				edit_contact(address_book);
@@ -335,7 +330,7 @@ Status menu(AddressBook *address_book)
 
 Status add_contacts(AddressBook *address_book)
 {
-ContactInfo newPerson;
+	ContactInfo newPerson;
 	int phoneCount = 0; //total number of phone numbers added
 	int emailCount = 0; //total number of emails added
 	int user_choice;
@@ -444,9 +439,100 @@ ContactInfo newPerson;
 	}
 	fprintf(address_book->fp, "%c", NEXT_ENTRY);
 
-	address_book->list = &newPerson;
+	
+	address_book->list[address_book->count - 1] = newPerson;
+	
+	char d = ' ';
+	do{
+		printf("%d\n", address_book->count);
+		for(int i = 0; i < address_book->count; i++)
+			printf("%s\n", address_book->list[i].name[0]);
+		scanf("%c", &d);
+
+	}while(d != 'c');
 	int k = 0;
-	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
+	//list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
+
+}
+
+void edit_this_contact(AddressBook *address_book, int serial){
+	int phoneCount = 0; //total number of phone numbers added
+	int emailCount = 0; //total number of emails added
+	int user_choice;
+
+	for(int i = 0; i < 5; i++){
+		if(address_book->list[serial-1].phone_numbers[i][0] != ' ')
+			phoneCount++;
+		if(address_book->list[serial-1].email_addresses[i][0] != ' ')
+			emailCount++;
+	}
+	
+
+	do{
+		//Displaying the menu
+	 	menu_header("Edit Contact:\n\n");
+		printf("0. Back\n");
+		printf("1. Name: %s\n", address_book->list[serial-1].name[0]);
+		printf("2. Phone No 1: %s\n", address_book->list[serial-1].phone_numbers[0]);
+
+		if(phoneCount > 1){		//If there are more than one phone numbers added it will loop to display
+			for(int i = 0; i < phoneCount-1; i++){
+				printf("\t    %d: %s\n", i+2, address_book->list[serial-1].phone_numbers[i+1]);
+			}
+		}
+	
+		printf("3. Email ID 1: %s\n", address_book->list[serial-1].email_addresses[0]);
+
+		if(emailCount > 1){		//If there are more than one emails added it will loop to display
+			for(int i = 0; i < emailCount-1; i++){
+				printf("\t    %d: %s\n", i+1, address_book->list[serial-1].email_addresses[i+1]);
+			}
+		}
+
+		//Prompting the user to select a menu option 0-3
+		do{
+			user_choice = get_option(NUM, "Please enter an option 0-3: ");
+			if(user_choice < 0 || user_choice > 3){
+				printf("Invalid input!\n");
+			}
+
+		} while(user_choice < 0 || user_choice > 3);
+		int phone_choice;
+		int email_choice;
+		//Switch for the user choices
+		switch(user_choice) {
+			case 0:
+				break;
+			case 1:	//Option to enter a name for contact
+				printf("Enter the name: ");
+				scanf("%s", address_book->list[serial-1].name[0]);
+				break;
+			case 2: //Option to enter a phone number for contact
+				do{
+					phone_choice = get_option(NUM, "Please choose which number to edit: ");
+					if(phone_choice < 1 || phone_choice > phoneCount){
+					printf("Invalid input!\n");
+					}
+				} while(phone_choice < 1 || phone_choice > phoneCount);
+				printf("Enter Phone Number %d: [Please reenter the same option for alternate Phone Number]: ", phone_choice);
+				scanf("%s",address_book->list[serial-1].phone_numbers[phone_choice-1]);
+
+				break;
+			case 3: //Option to enter a email for contact
+				do{
+					email_choice = get_option(NUM, "Please choose which email to edit: ");
+					if(email_choice < 1 || email_choice > emailCount){
+						printf("Invalid input!\n");
+					}
+				} while(email_choice < 1 || email_choice > emailCount);
+
+				printf("Enter Email ID %d: [Please reenter the same option for alternate Email ID]: ", email_choice);
+				scanf("%s",address_book->list[serial-1].email_addresses[email_choice-1]);
+
+				
+				break;
+		}
+	} while(user_choice != 0);
 
 }
 
@@ -454,21 +540,266 @@ ContactInfo newPerson;
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
 {
 	/* Add the functionality for adding contacts here */
+	/// switch(mode)- edit and delete might have int index
+	/// case edit:
+	//  int index; 
+	//  list(blah blah, &index);
+	//   index
+	int index = 0;
+	// list_contacts(AddressBook *address_book, const char *title, int *index, const char *msg, Modes mode)
+	switch(mode){
+		
+		case e_search:{
+			int result;
+			switch(field){
+				case 1:{
+					for(int i = 0; i < address_book->count; i++){
+						if(strcmp(str, address_book->list[i].name[0]) == 0){
+							result = i;
+							list_contacts(address_book, "Search Result", &result ,"Press Q to cancel: ", e_search);
+						}
+					}
+					break;
+				}
+				case 2:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].phone_numbers[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ,"Press Q to cancel: ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 3:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].email_addresses[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ,"Press Q to cancel: ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 4:{
+					for(int i = 0; i < address_book->count; i++){
+						if(address_book->list[i].si_no == atoi(str))
+							result = i;
+							list_contacts(address_book, "Search Result", &result ,"Press Q to cancel: ", e_search);
+					}
+					break;
+				}
+			}
+			break;
+		}
+		case e_edit:{
+			int result;
+			switch(field){
+				case 1:{
+					for(int i = 0; i < address_book->count; i++){
+						if(strcmp(str, address_book->list[i].name[0]) == 0){
+							result = i;
+							list_contacts(address_book, "Search Result", &result ," ", e_search);
+						}
+					}
+					break;
+				}
+				case 2:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].phone_numbers[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ," ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 3:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].email_addresses[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ," ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 4:{
+					for(int i = 0; i < address_book->count; i++){
+						if(address_book->list[i].si_no == atoi(str))
+							result = i;
+							list_contacts(address_book, "Search Result", &result ,"  ", e_search);
+					}
+					break;
+				}
+			}
+			/// list_contact(result,e_search))
+		    /// we get result, edit by 
+			list_contacts(address_book, "Search Result", &result, "Select a serial number: ", e_edit);
+			/// list_function in edit, int c = get_option(NUM, msg);
+			/// *index = c
+		    //// edit()
+			if(result != -1)
+				edit_this_contact(address_book, result);
+
+			break;
+		}
+		case e_delete:{ /////////////////////////////////////////E DEL
+			int result;
+			switch(field){
+				case 1:{
+					for(int i = 0; i < address_book->count; i++){
+						if(strcmp(str, address_book->list[i].name[0]) == 0){
+							result = i;
+							list_contacts(address_book, "Search Result", &result ," ", e_search);
+						}
+					}
+					break;
+				}
+				case 2:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].phone_numbers[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ," ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 3:{
+					
+					for(int i = 0; i < address_book->count; i++){
+						for(int j = 0; j < 5; j++){
+							if(strcmp(str, address_book->list[i].email_addresses[j]) == 0){
+								result = i;
+								list_contacts(address_book, "Search Result", &result ," ", e_search);
+							}
+						}
+						
+					}
+					break;
+				}
+				case 4:{
+					for(int i = 0; i < address_book->count; i++){
+						if(address_book->list[i].si_no == atoi(str))
+							result = i;
+							list_contacts(address_book, "Search Result", &result ,"  ", e_search);
+						}
+					break;
+				}
+
+			
+			// address->list[index]
+			// want to delet
+			}
+			list_contacts(address_book, "Search Result", &result, "Press s to select SI_NO, q to quit:", mode);
+		}
+	}
 }
 
-Status search_contact(AddressBook *address_book)
+Status search_contact(AddressBook *address_book, Modes mode)
 {
+	//search(... e_search)
 	/* Add the functionality for search contacts here */
+	int user_choice;
+	char str[32];
+
+	do {
+		menu_header("Search contact by: ");
+		printf("0. Back\n");
+		printf("1. Name\n");
+		printf("2. Phone\n");
+		printf("3. Email\n");
+		printf("4. Serial No.\n\n");
+		printf("Please select an option: ");
+
+		//Prompting the user to select a menu option 0-3
+		do{
+			user_choice = get_option(NUM, "Please enter an option 0-4: ");
+			if(user_choice < 0 || user_choice > 4){
+				printf("Invalid input!\n");
+			}
+
+		} while(user_choice < 0 || user_choice > 4);
+
+		switch(user_choice){
+			case 0:
+				break;
+			case 1: //Option to search for name
+				do{
+					//User inputs name to search for
+					printf("Enter the name: ");
+					scanf("%s", &str);
+					//If str length is greater than max name length possible
+					if(strlen(str) > 32)
+						printf("Invalid name length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", mode);
+				break;
+			case 2: //Option to search for phone number
+				do{
+					//User inputs phone to search for
+					printf("Enter the phone number: ");
+					scanf("%s", &str);
+					//If str length is greater than max phone length possible
+					if(strlen(str) > 32)
+						printf("Invalid phone length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", mode);				
+				break;
+			case 3: //Option to search for email
+				do{
+					//User inputs email to search for
+					printf("Enter the email: ");
+					scanf("%s", &str);
+					//If str length is greater than max email length possible
+					if(strlen(str) > 32)
+						printf("Invalid email length! Try Again.\n");
+				}while(strlen(str) > 32);
+
+				search(str, address_book, 0, user_choice, "", mode);				
+				break;
+			case 4: //Option to search for serial number
+				printf("Enter the serial number: ");
+				scanf("%s", &str);
+				search(str, address_book, 0, user_choice, "", mode);				
+				break;
+		}
+	} while(user_choice != 0);
+
+	return e_back;
 }
 
 Status edit_contact(AddressBook *address_book)
-{
+{ 	//search( . . . , e_edit)
 	/* Add the functionality for edit contacts here */
+	/// search( . . . , e_edit)
+	//search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
+	//search_contact();
+	search_contact(address_book, e_edit);
+
 }
 
 Status delete_contact(AddressBook *address_book)
-{
+{	// 
 	/* Add the functionality for delete contacts here */
+	/// search( . . . , e_delete)
+	search_contact(address_book, e_delete);
 }
-
-

@@ -11,7 +11,7 @@ int main(void)
 {
 	AddressBook address_book;
 	Status ret;
-
+	address_book.list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	/* Load the file from .csv file if any */
 	ret = load_file(&address_book);
 
