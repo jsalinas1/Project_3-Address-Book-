@@ -131,7 +131,7 @@ Status menu(AddressBook *address_book)
 	return e_success;
 }
 
-Status add_contacts(AddressBook *address_book)
+Status add_contacts(AddressBook *address_book, Modes mode)
 {
 ContactInfo newPerson;
 	int phoneCount = 0; //total number of phone numbers added

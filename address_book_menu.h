@@ -13,7 +13,7 @@ void menu_header(const char *str);
 void main_menu(void);
 Status menu(AddressBook *address_book);
 Status save_prompt(AddressBook *address_book);
-Status add_contacts(AddressBook *address_book);
+Status add_contacts(AddressBook *address_book, Modes mode);
 Status search_contact(AddressBook *address_book);
 Status edit_contact(AddressBook *address_book);
 Status delete_contact(AddressBook *address_book);
