@@ -447,6 +447,8 @@ void edit_this_contact(AddressBook *address_book, int serial){
 	int phoneCount = 0; //total number of phone numbers added
 	int emailCount = 0; //total number of emails added
 	int user_choice;
+	int phone_choice;
+	int email_choice;
 
 	for(int i = 0; i < 5; i++){
 		if(address_book->list[serial-1].phone_numbers[i][0] != ' ')
@@ -473,7 +475,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 
 		if(emailCount > 1){		//If there are more than one emails added it will loop to display
 			for(int i = 0; i < emailCount-1; i++){
-				printf("\t    %d: %s\n", i+1, address_book->list[serial-1].email_addresses[i+1]);
+				printf("\t    %d: %s\n", i+2, address_book->list[serial-1].email_addresses[i+1]);
 			}
 		}
 
@@ -485,8 +487,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 			}
 
 		} while(user_choice < 0 || user_choice > 3);
-		int phone_choice;
-		int email_choice;
+
 		//Switch for the user choices
 		switch(user_choice) {
 			case 0:
@@ -497,22 +498,28 @@ void edit_this_contact(AddressBook *address_book, int serial){
 				break;
 			case 2: //Option to enter a phone number for contact
 				do{
-					phone_choice = get_option(NUM, "Please choose which number to edit: ");
-					if(phone_choice < 1 || phone_choice > phoneCount){
-					printf("Invalid input!\n");
+					phone_choice = get_option(NUM, "Please choose an existing number to edit, or select the next number to add a phone [MAX 5 PHONES]: ");
+					if(phone_choice < 1 || phone_choice > phoneCount+1 || phone_choice > 5){
+						printf("Invalid input!\n");
 					}
-				} while(phone_choice < 1 || phone_choice > phoneCount);
+					if(phone_choice == phoneCount+1){
+						phoneCount++;
+					}
+				} while(phone_choice < 1 || phone_choice > phoneCount+1 || phone_choice > 5);
 				printf("Enter Phone Number %d: [Please reenter the same option for alternate Phone Number]: ", phone_choice);
 				scanf("%s",address_book->list[serial-1].phone_numbers[phone_choice-1]);
 
 				break;
 			case 3: //Option to enter a email for contact
 				do{
-					email_choice = get_option(NUM, "Please choose which email to edit: ");
-					if(email_choice < 1 || email_choice > emailCount){
+					email_choice = get_option(NUM, "Please choose an existing email to edit, or select the next number to add a email[MAX 5 EMAILS]: ");
+					if(email_choice < 1 || email_choice > emailCount+1 || email_choice > 5){
 						printf("Invalid input!\n");
 					}
-				} while(email_choice < 1 || email_choice > emailCount);
+					if(email_choice == emailCount+1){
+						emailCount++;
+					}					
+				} while(email_choice < 1 || email_choice > emailCount+1 || email_choice > 5);
 
 				printf("Enter Email ID %d: [Please reenter the same option for alternate Email ID]: ", email_choice);
 				scanf("%s",address_book->list[serial-1].email_addresses[email_choice-1]);
