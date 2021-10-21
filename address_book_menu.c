@@ -174,7 +174,7 @@ ContactInfo newPerson;
 
 		//Switch for the user choices
 		switch(user_choice) {
-			case 0:
+			case 0: //Option to go back
 				break;
 			case 1:	//Option to enter a name for contact
 				printf("Enter the name: ");
@@ -205,39 +205,17 @@ ContactInfo newPerson;
 	address_book->count++;
 	newPerson.si_no = address_book->count;
 
-	/*
-	Print contact info to .csv file
-	Each 11 possible fields for the contact are separated by a comma.
-	Unused fields for phone and email are set to a space.
-	Adds a new line to the .csv at the end of the contact info.
-	*/
-	fprintf(address_book->fp, "%d", newPerson.si_no);
-	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
-	fprintf(address_book->fp, "%s", newPerson.name);
-	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
+	//Add a space for each empty index of phone or email
+	for (int i = phoneCount; i < 5; i++)
+		strcpy(newPerson.phone_numbers[i-1], " ");
+	for (int i = emailCount; i < 5; i++)
+		strcpy(newPerson.email_addresses[i-1], " ");
 
-	for(int i = 0; i < 5; i++){
-		if(i < phoneCount){
-			fprintf(address_book->fp, newPerson.phone_numbers[i]);
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		} else {
-			fprintf(address_book->fp, " ");
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		}
-	}
 
-	for(int i = 0; i < 5; i++){
-		if(i < emailCount){
-			fprintf(address_book->fp, newPerson.email_addresses[i]);
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		} else {
-			fprintf(address_book->fp, " ");			
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		}
-	}
-	fprintf(address_book->fp, "%c", NEXT_ENTRY);
+	address_book->list[address_book->count] = newPerson;
+	int k = 0;
+	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
 
-	return e_back;
 }
 
 Status search(const char *str, AddressBook *address_book, int loop_count, int field, const char *msg, Modes mode)
@@ -265,52 +243,52 @@ Status search_contact(AddressBook *address_book)
 			if(user_choice < 0 || user_choice > 4){
 				printf("Invalid input!\n");
 			}
-
 		} while(user_choice < 0 || user_choice > 4);
 
+		//Switch for user choices
 		switch(user_choice){
-			case 0:
+			case 0: //Option to go back
 				break;
 			case 1: //Option to search for name
 				do{
 					//User inputs name to search for
 					printf("Enter the name: ");
 					scanf("%s", &str);
-					//If str length is greater than max name length possible
+					//If str length is greater than max name length possible prompt again
 					if(strlen(str) > 32)
 						printf("Invalid name length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search_contact);
+				search(str, address_book, 0, user_choice, "", e_search);
 				break;
 			case 2: //Option to search for phone number
 				do{
 					//User inputs phone to search for
 					printf("Enter the phone number: ");
 					scanf("%s", &str);
-					//If str length is greater than max phone length possible
+					//If str length is greater than max phone length possible prompt again
 					if(strlen(str) > 32)
 						printf("Invalid phone length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				search(str, address_book, 0, user_choice, "", e_search);				
 				break;
 			case 3: //Option to search for email
 				do{
 					//User inputs email to search for
 					printf("Enter the email: ");
 					scanf("%s", &str);
-					//If str length is greater than max email length possible
+					//If str length is greater than max email length possible prompt again
 					if(strlen(str) > 32)
 						printf("Invalid email length! Try Again.\n");
 				}while(strlen(str) > 32);
 
-				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				search(str, address_book, 0, user_choice, "", e_search);				
 				break;
 			case 4: //Option to search for serial number
 				printf("Enter the serial number: ");
 				scanf("%s", &str);
-				search(str, address_book, 0, user_choice, "", e_search_contact);				
+				search(str, address_book, 0, user_choice, "", e_search);				
 				break;
 		}
 	} while(user_choice != 0);
