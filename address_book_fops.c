@@ -10,37 +10,22 @@
 
 Status load_file(AddressBook *address_book)
 {
-	int ret;
-
-	/* 
-	 * Check for file existance
-	 */
-	address_book->count = 0;
-    /// access fp file, then store it in list, then list++;
-	if(address_book->fp = fopen("Test.csv", "r")){
-		char c;
-		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
-        	if (c == '\n') // Increment count if this character is newline
-            	address_book->count++;
-		fclose(address_book->fp);
-		ret = 0;
-	}
-
-	if (ret == 0)
+	char c;
+	
+	// Check for file existance
+	address_book->fp = fopen("Test.csv", "r");
+	if(address_book->fp != NULL)
 	{
-		/* 
-		 * Do the neccessary step to open the file
-		 * Do error handling
-		 */ 
-		address_book->fp = fopen("Test.csv", "a+");
-		char str[400];
-		
-		//for(int i = 0; i < address_book->count; i++){
-		
-		char c;
+		address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 
-		for(int i = 0; i < address_book->count; i++){
-			fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]", 
+		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
+
+		c = getc(address_book->fp);
+
+		for(int i = 0; i < address_book->count; i++)
+		{
+			fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]",
+
 			&address_book->list[i].si_no,
 			address_book->list[i].name[0], address_book->list[i].phone_numbers[0], address_book->list[i].phone_numbers[1], 
 			address_book->list[i].phone_numbers[2], 
@@ -48,17 +33,23 @@ Status load_file(AddressBook *address_book)
 			address_book->list[i].email_addresses[1], address_book->list[0].email_addresses[2], address_book->list[i].email_addresses[3], 
 			address_book->list[i].email_addresses[4]);
 
-		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
-        	if (c == '\n') break;
+			for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
+			{
+				if (c == '\n') 
+				{
+					break;
+				}	
+			}
 		}
-	
-		//}
 
+		fclose(address_book->fp);
 	}
+	/* else reate a new file for adding entries */
 	else
 	{
-		/* Create a file for adding entries */
+		
 		address_book->fp = fopen("Test.csv", "w");
+		fclose(address_book->fp);
 	}
 
 	return e_success;
