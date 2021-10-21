@@ -118,14 +118,20 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 					*index = *index + 1;
 					load_contact(address_book, c);	
 				}
-				/*else if(*index > 0 && c == 'p'){
+				else if(*index > 0 && c == 'p'){
 					*index = *index - 1;
 					fclose(address_book->fp);
 					load_file(address_book);
-					for(int i = 0; i < *index; i++)
-						fscanf(address_book->fp, "%[^\n]", str);
+					int line = *index;
+  				  	int end, loop;
+    				for(end = loop = 0; loop < line; ++loop){ ///Reads a specific line
+       				 	if(0 == fgets(str, sizeof(str), address_book->fp)){
+          				 	 end = 1;
+           					 break;
+        				}
+   					}
 					load_contact(address_book, c);
-				}*/
+				}
 
 				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
 				address_book->list->phone_numbers[0],
