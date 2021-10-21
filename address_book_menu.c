@@ -268,9 +268,6 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 
 	}
 
-	 
-
-
 	return e_success;
 }
 
@@ -308,7 +305,6 @@ void main_menu(void)
 
 Status menu(AddressBook *address_book)
 {
-	//address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	ContactInfo backup;
 	Status ret;
 	int option;
@@ -317,7 +313,6 @@ Status menu(AddressBook *address_book)
 	do
 	{
 		main_menu();
-		//for(int i = 0; i < address_book->count; i++) printf("%s\n", address_book->list[i].name[0]);
 		option = get_option(NUM, "");
 		
 		if ((address_book-> count == 0) && (option != e_add_contact))
@@ -344,7 +339,6 @@ Status menu(AddressBook *address_book)
 			case e_list_contacts:
 				list_contacts(address_book, "Search Result",&k, "Press q to quit | n next page: ", e_list);
 				break;
-				/* Add your implementation to call list_contacts function here */
 			case e_save:
 				save_file(address_book);
 				break;
@@ -431,43 +425,8 @@ Status add_contacts(AddressBook *address_book)
 	//Increment count and assign SI_NO to count
 	address_book->count++;
 	newPerson.si_no = address_book->count;
-
-
-
-
-	/*
-	Print contact info to .csv file
-	Each 11 possible fields for the contact are separated by a comma.
-	Unused fields for phone and email are set to a space.
-	Adds a new line to the .csv at the end of the contact info.
-	*/
-	fprintf(address_book->fp, "%d", newPerson.si_no);
-	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
-	fprintf(address_book->fp, "%s", newPerson.name[0]);
-	fprintf(address_book->fp, "%c",FIELD_DELIMITER);
-
-	for(int i = 0; i < 5; i++){
-		if(i < phoneCount){
-			fprintf(address_book->fp, newPerson.phone_numbers[i]);
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		} else {
-			fprintf(address_book->fp, " ");
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		}
-	}
-
-	for(int i = 0; i < 5; i++){
-		if(i < emailCount){
-			fprintf(address_book->fp, newPerson.email_addresses[i]);
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		} else {
-			fprintf(address_book->fp, " ");			
-			fprintf(address_book->fp, "%c", FIELD_DELIMITER);
-		}
-	}
-	fprintf(address_book->fp, "%c", NEXT_ENTRY);
-
 	
+	//Assign new contact to list in AddressBook struct
 	address_book->list[address_book->count - 1] = newPerson;
 	
 	/*char d = ' ';
@@ -478,6 +437,7 @@ Status add_contacts(AddressBook *address_book)
 		scanf("%c", &d);
 
 	}while(d != 'c');*/
+
 	int k = address_book->count - 1;
 	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
 
