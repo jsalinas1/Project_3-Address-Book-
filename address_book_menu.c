@@ -145,10 +145,27 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 				
 		}while(c != 'q' && c != 'Q');
 
-		
 		break;
 		}
 		case e_search:{
+			int c;
+			do{
+				menu_header(title);
+				
+				printf("=======================================================================================================\n");
+				printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
+	 			printf("=======================================================================================================\n");
+				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list->si_no, address_book->list->name[0],
+				address_book->list->phone_numbers[0],
+				address_book->list->email_addresses[0]);
+				for(int i = 1; i < 5; i++)	
+					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
+					address_book->list->phone_numbers[i],
+					address_book->list->email_addresses[i]);
+				printf("=======================================================================================================\n");
+				c = get_option(CHAR, msg);
+				
+			}while(c != 'q' && c != 'Q');
 			
 			break;
 		}
