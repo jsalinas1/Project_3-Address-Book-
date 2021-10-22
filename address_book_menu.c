@@ -186,12 +186,12 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 				printf(":  %-4d: %-28s: %-32s: %-29s:\n",address_book->list[myIndex].si_no, address_book->list[myIndex].name[0],
 				address_book->list[myIndex].phone_numbers[0],
 				address_book->list[myIndex].email_addresses[0]);
-				for(int i = 1; i < 5; i++)	
+				for(int i = 1; i < 5; i++){
 					printf(":%-6c:%-29c: %-32s: %-29s:\n",' ',' ',
 					address_book->list[myIndex].phone_numbers[i],
 					address_book->list[myIndex].email_addresses[i]);
+				}
 				printf("=======================================================================================================\n");
-				
 				
 			}while(c != 'q' && c != 'Q');
 			
@@ -401,9 +401,7 @@ Status add_contacts(AddressBook *address_book)
 			case 1:	//Option to enter a name for contact
 				printf("Enter the name: ");
 				getchar();
-				fgets(newPerson.name[0], 33, stdin);
-				if((p = strchr(newPerson.name[0], '\n')) != NULL)
-					*p = '\0';
+				scanf("%[^\n]s", &newPerson.name[0]);
 				break;
 			case 2: //Option to enter a phone number for contact
 				if(phoneCount < 5){
@@ -500,9 +498,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 			case 1:	//Option to enter a name for contact
 				printf("Enter the name: ");
 				getchar();
-				fgets(address_book->list[serial-1].name[0], 33, stdin);
-				if((p = strchr(address_book->list[serial-1].name[0], '\n')) != NULL)
-					*p = '\0';
+				scanf("%[^\n]s", &address_book->list[serial-1].name[0]);
 				break;
 			case 2: //Option to enter a phone number for contact
 				do{
@@ -595,9 +591,10 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				}
 				case 4:{
 					for(int i = 0; i < address_book->count; i++){
-						if(address_book->list[i].si_no == atoi(str))
+						if(address_book->list[i].si_no == atoi(str)){
 							result = i;
 							list_contacts(address_book, "Search Result", &result ," ", e_search);
+						}
 					}
 					break;
 				}
@@ -648,9 +645,10 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				}
 				case 4:{
 					for(int i = 0; i < address_book->count; i++){
-						if(address_book->list[i].si_no == atoi(str))
+						if(address_book->list[i].si_no == atoi(str)){
 							result = i;
 							list_contacts(address_book, "Search Result", &result ," ", e_search);
+						}
 					}
 					break;
 				}
@@ -759,9 +757,8 @@ Status search_contact(AddressBook *address_book, Modes mode)
 					//User inputs name to search for
 					printf("Enter the name: ");
 					getchar();
-					fgets(str, 33, stdin);
-					if((p = strchr(str, '\n')) != NULL)
-						*p = '\0';
+					scanf("%[^\n]s", &str);
+
 					//If str length is greater than max name length possible
 					if(strlen(str) > 32)
 						printf("Invalid name length! Try Again.\n");
@@ -795,7 +792,8 @@ Status search_contact(AddressBook *address_book, Modes mode)
 				break;
 			case 4: //Option to search for serial number
 				printf("Enter the serial number: ");
-				scanf("%s", &str);
+				getchar();
+				scanf("%[^\n]s", &str);
 				search(str, address_book, 0, user_choice, "", mode);				
 				break;
 		}
