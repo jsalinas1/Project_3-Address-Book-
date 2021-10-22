@@ -48,6 +48,7 @@ Status load_file(AddressBook *address_book)
 	else
 	{
 		address_book->fp = fopen(DEFAULT_FILE, "w");
+		address_book->count = 0;
 		fclose(address_book->fp);
 	}
 
