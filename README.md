@@ -2,10 +2,10 @@
 ## Team members
 | NAME            | Task            |
 | --------------- | --------------- |
-| Jezreel Salinas  |  list_contact(), get_option(), debugging duty|
-| Alexander Rodriguez       |  add_contact(), search_contact() PrivateCar |
-| Ana Estrada  |  edit_contact(), delete_contact(), video of simulation |
-| Andy Chen          |  menu(), load_file() and save_file()  |
+| Jezreel Salinas  |  list_contact(), get_option(), bug police|
+| Alexander Rodriguez       |  add_contact(), search_contact(), bug police |
+| Ana Estrada  |  edit_contact(), delete_contact(), video of simulation, bug police |
+| Andy Chen          |  menu(), load_file() and save_file(), bug police |
 | ---------------| --------------- |
 | As a group      | search() - search, edit, and delete cases   |
 
