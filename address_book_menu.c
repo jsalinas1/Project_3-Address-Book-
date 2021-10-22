@@ -212,7 +212,7 @@ ContactInfo newPerson;
 		strcpy(newPerson.email_addresses[i-1], " ");
 
 
-	address_book->list[address_book->count] = newPerson;
+	address_book->list[address_book->count-1] = newPerson;
 	int k = 0;
 	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
 
