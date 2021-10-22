@@ -29,8 +29,8 @@ Status load_file(AddressBook *address_book)
 			&address_book->list[i].si_no,
 			address_book->list[i].name[0], address_book->list[i].phone_numbers[0], address_book->list[i].phone_numbers[1], 
 			address_book->list[i].phone_numbers[2], 
-			address_book->list[i].phone_numbers[3], address_book->list[0].phone_numbers[4], address_book->list[i].email_addresses[0], 
-			address_book->list[i].email_addresses[1], address_book->list[0].email_addresses[2], address_book->list[i].email_addresses[3], 
+			address_book->list[i].phone_numbers[3], address_book->list[i].phone_numbers[4], address_book->list[i].email_addresses[0], 
+			address_book->list[i].email_addresses[1], address_book->list[i].email_addresses[2], address_book->list[i].email_addresses[3], 
 			address_book->list[i].email_addresses[4]);
 
 			for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
@@ -60,7 +60,7 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */
-	address_book->fp = fopen("Test2.csv", "w");
+	address_book->fp = fopen("Test.csv", "w");
 
 	if (address_book->fp == NULL)
 	{
