@@ -172,7 +172,12 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 			do{
 				c = get_option(CHAR, "Press s to select | q to cancel : ");
 				if(c == 's'){
-					choice = get_option(NUM, "Please select a number: ");
+					do{
+						choice = get_option(NUM, "Please select a number: ");
+						if(choice < 0 || choice > address_book->count)
+							printf("Invalid input\n");
+						
+					}while(choice < 0 || choice > address_book->count);
 					break;
 				}
 			}while(c != 'q');
@@ -292,7 +297,7 @@ Status menu(AddressBook *address_book)
 				delete_contact(address_book);
 				break;
 			case e_list_contacts:
-				list_contacts(address_book, "Search Result",&k, "Press q to quit | n next page: ", e_list);
+				list_contacts(address_book, "Search Result",&k, "Press q to quit | n next page | p previous page: ", e_list);
 				break;
 			case e_save:
 				save_file(address_book);
@@ -308,6 +313,7 @@ Status menu(AddressBook *address_book)
 Status add_contacts(AddressBook *address_book)
 {
 	ContactInfo newPerson;
+	int nameCount = 0;
 	int phoneCount = 0; //total number of phone numbers added
 	int emailCount = 0; //total number of emails added
 	int user_choice;
@@ -354,6 +360,7 @@ Status add_contacts(AddressBook *address_book)
 			case 0:
 				break;
 			case 1:	//Option to enter a name for contact
+				nameCount++;
 				printf("Enter the name: ");
 				getchar();
 				scanf("%[^\n]s", &newPerson.name[0]);
@@ -379,17 +386,20 @@ Status add_contacts(AddressBook *address_book)
 		}
 	} while(user_choice != 0);
 
+	if(nameCount > 0 || phoneCount > 0 || emailCount > 0){
 	//Increment count and assign SI_NO to count
-	address_book->count++;
-	newPerson.si_no = address_book->count;
+		address_book->count++;
+		newPerson.si_no = address_book->count;
 	
 	//Assign new contact to list in AddressBook struct
-	address_book->list[address_book->count - 1] = newPerson;
+		address_book->list[address_book->count - 1] = newPerson;
 	
 
 
-	int k = address_book->count - 1;
-	list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
+		int k = address_book->count - 1;
+		list_contacts(address_book, "Add Result",&k, "Press q to quit", e_add);
+	}
+	return e_success;
 
 }
 
@@ -542,14 +552,14 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 					break;
 				}
 			}
-			list_contacts(address_book, "Search Result", &result ,"S", e_search);
+			list_contacts(address_book, "Search Result", &result ,"S", mode);
 			break;
 		}
 		case e_edit:{
 			printf("=======================================================================================================\n");
 			printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
 	 		printf("=======================================================================================================\n");
-			int result;
+			int result = -1;
 			switch(field){
 				case 1:{
 					for(int i = 0; i < address_book->count; i++){
@@ -598,11 +608,15 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 			}
 			/// list_contact(result,e_search))
 		    /// we get result, edit by 
-			list_contacts(address_book, "Search Result", &result, "Select a serial number: ", e_edit);
+			if(result != -1){
+				list_contacts(address_book, "Search Result", &result, "Select a serial number: ", mode);
+				edit_this_contact(address_book, result);
+			}
+			else
+				list_contacts(address_book, "Search Result", &result ,"S", e_search);
 			/// list_function in edit, int c = get_option(NUM, msg);
 
-			if(result != -1)
-				edit_this_contact(address_book, result);
+				
 
 			break;
 		}
@@ -610,7 +624,7 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 			printf("=======================================================================================================\n");
 			printf(": S.No : Name                        : Phone No                        : Email ID                     :\n");
 	 		printf("=======================================================================================================\n");
-			int result;
+			int result = -1;
 			switch(field){
 				case 1:{
 					for(int i = 0; i < address_book->count; i++){
@@ -649,16 +663,21 @@ Status search(const char *str, AddressBook *address_book, int loop_count, int fi
 				}
 				case 4:{
 					for(int i = 0; i < address_book->count; i++){
-						if(address_book->list[i].si_no == atoi(str))
+						if(address_book->list[i].si_no == atoi(str)){
 							result = i;
 							list_contacts(address_book, "Search Result", &result ," ", e_search);
+							}
 						}
 					break;
 				}
 
 			
 			}
-			list_contacts(address_book, "Search Result", &result, "Press s to select SI_NO, q to quit:", mode);
+			if(result != -1)
+				list_contacts(address_book, "Search Result", &result, "Press s to select SI_NO, q to quit:", mode);
+			else
+				list_contacts(address_book, "Search Result", &result ,"S", e_search);
+			
 		}
 	}
 }

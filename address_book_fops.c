@@ -15,13 +15,11 @@ Status load_file(AddressBook *address_book)
 	/* 
 	 * Check for file existance
 	 */
+
+	address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	address_book->count = 0;
     /// access fp file, then store it in list, then list++;
 	if(address_book->fp = fopen(DEFAULT_FILE, "r")){
-		char c;
-		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
-        	if (c == '\n') // Increment count if this character is newline
-            	address_book->count++;
 		fclose(address_book->fp);
 		ret = 0;
 	}
@@ -33,11 +31,13 @@ Status load_file(AddressBook *address_book)
 		 * Do error handling
 		 */ 
 		address_book->fp = fopen(DEFAULT_FILE, "a+");
-		char str[400];
+		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
 		
 		//for(int i = 0; i < address_book->count; i++){
 		
 		char c;
+
+		c = getc(address_book->fp);
 
 		for(int i = 0; i < address_book->count; i++){
 			fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]", 
@@ -51,7 +51,8 @@ Status load_file(AddressBook *address_book)
 		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
         	if (c == '\n') break;
 		}
-	
+
+		fclose(address_book->fp);
 		//}
 
 	}
@@ -59,6 +60,7 @@ Status load_file(AddressBook *address_book)
 	{
 		/* Create a file for adding entries */
 		address_book->fp = fopen(DEFAULT_FILE, "w");
+		fclose(address_book->fp);
 	}
 
 	return e_success;
@@ -70,7 +72,6 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */ 
-	fclose(address_book->fp);
 
 	
 
@@ -81,6 +82,30 @@ Status save_file(AddressBook *address_book)
 		return e_fail;
 	}
 
+	fprintf(address_book->fp, "count=%d\n", address_book->count);
+
+	for (int listIndex = 0; listIndex < address_book ->count; listIndex++)
+	{
+		// serial number
+		fprintf(address_book ->fp, "%d,", address_book->list[listIndex].si_no);
+
+		// name
+		fprintf(address_book->fp, "%s,", address_book->list[listIndex].name);
+
+		// phone number
+		for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+		{
+			fprintf(address_book->fp, "%s,", address_book->list[listIndex].phone_numbers[i]);
+		}
+
+		// email address
+		for (int i = 0; i < EMAIL_ID_COUNT; i++)
+		{
+			fprintf(address_book->fp, "%s,", address_book->list[listIndex].email_addresses[i]);
+		}
+
+		fputs("\n", address_book->fp);
+	}
 	/* 
 	 * Add the logic to save the file
 	 * Make sure to do error handling
