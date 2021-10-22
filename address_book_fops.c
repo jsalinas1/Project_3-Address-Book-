@@ -11,12 +11,14 @@
 Status load_file(AddressBook *address_book)
 {
 	char c;
+
+	address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	
 	// Check for file existance
 	address_book->fp = fopen("Test.csv", "r");
 	if(address_book->fp != NULL)
 	{
-		address_book->list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
+		
 
 		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
 
@@ -60,22 +62,19 @@ Status save_file(AddressBook *address_book)
 	/*
 	 * Write contacts back to file.
 	 * Re write the complete file currently
-	 */ 
-	fclose(address_book->fp);
+	 */
 
 	
 
-	address_book->fp = fopen(DEFAULT_FILE, "w");
+	address_book->fp = fopen("Test.csv", "w");
 
 	if (address_book->fp == NULL)
 	{
 		return e_fail;
 	}
-
-	/* 
-	 * Add the logic to save the file
-	 * Make sure to do error handling
-	 */ 
+	
+	
+	 
 
 	fclose(address_book->fp);
 
