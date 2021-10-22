@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 //#include <stdio_ext.h>
 #include <stdlib.h>
@@ -272,13 +273,23 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 }
 
 
+//Function to clear screen depending on OS
+void clear_screen(){
+	#ifdef _WINDOWS
+		system("cls");
+	#else
+		system("clear");
+	#endif
+}
+
 
 void menu_header(const char *str)
 {
 	fflush(stdout);
 
 
-	system("cls");
+	//system("cls");
+	clear_screen();
 
 	printf("#######  Address Book  #######\n");
 	if (*str != '\0')
