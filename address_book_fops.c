@@ -17,7 +17,7 @@ Status load_file(AddressBook *address_book)
 	 */
 	address_book->count = 0;
     /// access fp file, then store it in list, then list++;
-	if(address_book->fp = fopen("Test.csv", "r")){
+	if(address_book->fp = fopen(DEFAULT_FILE, "r")){
 		char c;
 		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
         	if (c == '\n') // Increment count if this character is newline
@@ -32,7 +32,7 @@ Status load_file(AddressBook *address_book)
 		 * Do the neccessary step to open the file
 		 * Do error handling
 		 */ 
-		address_book->fp = fopen("Test.csv", "a+");
+		address_book->fp = fopen(DEFAULT_FILE, "a+");
 		char str[400];
 		
 		//for(int i = 0; i < address_book->count; i++){
@@ -44,8 +44,8 @@ Status load_file(AddressBook *address_book)
 			&address_book->list[i].si_no,
 			address_book->list[i].name[0], address_book->list[i].phone_numbers[0], address_book->list[i].phone_numbers[1], 
 			address_book->list[i].phone_numbers[2], 
-			address_book->list[i].phone_numbers[3], address_book->list[0].phone_numbers[4], address_book->list[i].email_addresses[0], 
-			address_book->list[i].email_addresses[1], address_book->list[0].email_addresses[2], address_book->list[i].email_addresses[3], 
+			address_book->list[i].phone_numbers[3], address_book->list[i].phone_numbers[4], address_book->list[i].email_addresses[0], 
+			address_book->list[i].email_addresses[1], address_book->list[i].email_addresses[2], address_book->list[i].email_addresses[3], 
 			address_book->list[i].email_addresses[4]);
 
 		for (c = getc(address_book->fp); c != EOF; c = getc(address_book->fp))
@@ -58,7 +58,7 @@ Status load_file(AddressBook *address_book)
 	else
 	{
 		/* Create a file for adding entries */
-		address_book->fp = fopen("Test.csv", "w");
+		address_book->fp = fopen(DEFAULT_FILE, "w");
 	}
 
 	return e_success;
@@ -92,7 +92,8 @@ Status save_file(AddressBook *address_book)
 }
 
 /*
-void main(){
+void main(){ /// Test function
+
 	AddressBook test;
 	test.list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
 	load_file(&test);
