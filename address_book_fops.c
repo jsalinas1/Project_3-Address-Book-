@@ -26,6 +26,10 @@ Status load_file(AddressBook *address_book)
 
 		for(int i = 0; i < address_book->count; i++)
 		{
+		
+
+
+
 			fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]",
 
 			&address_book->list[i].si_no,
@@ -49,7 +53,6 @@ Status load_file(AddressBook *address_book)
 	/* else reate a new file for adding entries */
 	else
 	{
-		
 		address_book->fp = fopen("Test.csv", "w");
 		fclose(address_book->fp);
 	}
@@ -63,17 +66,37 @@ Status save_file(AddressBook *address_book)
 	 * Write contacts back to file.
 	 * Re write the complete file currently
 	 */
-
-	
-
-	address_book->fp = fopen("Test.csv", "w");
+	address_book->fp = fopen("Test2.csv", "w");
 
 	if (address_book->fp == NULL)
 	{
 		return e_fail;
 	}
 	
-	
+	fprintf(address_book->fp, "count=%d\n", address_book->count);
+
+	for (int listIndex = 0; listIndex < address_book ->count; listIndex++)
+	{
+		// serial number
+		fprintf(address_book ->fp, "%d,", address_book->list[listIndex].si_no);
+
+		// name
+		fprintf(address_book->fp, "%s,", address_book->list[listIndex].name);
+
+		// phone number
+		for (int i = 0; i < PHONE_NUMBER_COUNT; i++)
+		{
+			fprintf(address_book->fp, "%s,", address_book->list[listIndex].phone_numbers[i]);
+		}
+
+		// email address
+		for (int i = 0; i < EMAIL_ID_COUNT; i++)
+		{
+			fprintf(address_book->fp, "%s,", address_book->list[listIndex].email_addresses[i]);
+		}
+
+		fputs("\n", address_book->fp);
+	}
 	 
 
 	fclose(address_book->fp);
