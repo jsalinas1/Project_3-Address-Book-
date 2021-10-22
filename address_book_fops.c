@@ -18,18 +18,12 @@ Status load_file(AddressBook *address_book)
 	address_book->fp = fopen("Test.csv", "r");
 	if(address_book->fp != NULL)
 	{
-		
-
 		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
 
 		c = getc(address_book->fp);
 
 		for(int i = 0; i < address_book->count; i++)
 		{
-		
-
-
-
 			fscanf(address_book->fp, "%d,%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,],%32[^,]",
 
 			&address_book->list[i].si_no,
@@ -103,15 +97,3 @@ Status save_file(AddressBook *address_book)
 
 	return e_success;
 }
-
-/*
-void main(){
-	AddressBook test;
-	test.list = (ContactInfo*)malloc(sizeof(ContactInfo)*100);
-	load_file(&test);
-	printf("List size: %d\n", test.count);
-	for(int i = 0; i < test.count; i++)
-		printf("%d %s\n", test.list[i].si_no, test.list[i].name[0]);
-	
-
-}*/
