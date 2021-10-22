@@ -356,6 +356,7 @@ Status add_contacts(AddressBook *address_book)
 	int phoneCount = 0; //total number of phone numbers added
 	int emailCount = 0; //total number of emails added
 	int user_choice;
+	char *p;
 
 	strcpy(newPerson.name[0], " "); /// Reinitializing the strings with default space
 	for(int i = 0; i < 5; i ++){
@@ -399,7 +400,10 @@ Status add_contacts(AddressBook *address_book)
 				break;
 			case 1:	//Option to enter a name for contact
 				printf("Enter the name: ");
-				scanf("%s", newPerson.name[0]);
+				getchar();
+				fgets(newPerson.name[0], 33, stdin);
+				if((p = strchr(newPerson.name[0], '\n')) != NULL)
+					*p = '\0';
 				break;
 			case 2: //Option to enter a phone number for contact
 				if(phoneCount < 5){
@@ -449,6 +453,7 @@ void edit_this_contact(AddressBook *address_book, int serial){
 	int user_choice;
 	int phone_choice;
 	int email_choice;
+	char *p;
 
 	for(int i = 0; i < 5; i++){
 		if(address_book->list[serial-1].phone_numbers[i][0] != ' ')
@@ -494,7 +499,10 @@ void edit_this_contact(AddressBook *address_book, int serial){
 				break;
 			case 1:	//Option to enter a name for contact
 				printf("Enter the name: ");
-				scanf("%s", address_book->list[serial-1].name[0]);
+				getchar();
+				fgets(address_book->list[serial-1].name[0], 33, stdin);
+				if((p = strchr(address_book->list[serial-1].name[0], '\n')) != NULL)
+					*p = '\0';
 				break;
 			case 2: //Option to enter a phone number for contact
 				do{
@@ -723,6 +731,7 @@ Status search_contact(AddressBook *address_book, Modes mode)
 	/* Add the functionality for search contacts here */
 	int user_choice;
 	char str[32];
+	char *p;
 
 	do {
 		menu_header("Search contact by: ");
@@ -749,7 +758,10 @@ Status search_contact(AddressBook *address_book, Modes mode)
 				do{
 					//User inputs name to search for
 					printf("Enter the name: ");
-					scanf("%s", &str);
+					getchar();
+					fgets(str, 33, stdin);
+					if((p = strchr(str, '\n')) != NULL)
+						*p = '\0';
 					//If str length is greater than max name length possible
 					if(strlen(str) > 32)
 						printf("Invalid name length! Try Again.\n");
