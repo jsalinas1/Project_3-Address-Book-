@@ -175,6 +175,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 		case e_delete:{
 			int choice;
 			char c;
+			char deleteOption;
 			do{
 				c = get_option(CHAR, "Press s to select | q to cancel : ");
 				if(c == 's'){
@@ -190,6 +191,7 @@ Status list_contacts(AddressBook *address_book, const char *title, int *index, c
 
 			if(c == 's')
 			{
+
 				strcpy(address_book->list[choice-1].name[0], address_book->list[address_book->count - 1].name[0]);
 				for(int i = 0; i < 5; i++)
 				{
