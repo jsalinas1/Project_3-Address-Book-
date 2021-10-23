@@ -18,8 +18,13 @@ Status load_file(AddressBook *address_book)
 	address_book->fp = fopen(DEFAULT_FILE, "r");
 	if(address_book->fp != NULL)
 	{
-		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
+		c = getc(address_book->fp);
+		if (c == EOF)					// if save file is empty, initialize count to zero
+		{
+			address_book->count = 0;
+		}
 
+		fscanf(address_book->fp, "%*[^0-9]%d", &address_book->count);
 		c = getc(address_book->fp);
 
 		for(int i = 0; i < address_book->count; i++)
